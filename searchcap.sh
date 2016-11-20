@@ -4,11 +4,12 @@
 # Last-Update: 2016-01-05
 
 ARQ_READ=$1
-ARQ_WRITE=arq_com$(date +%d-%m-%y_%Hh%Mmin).log
+ARQ_WRITE=arq_com$(date +%d-%m-%y_%Hh%Mmin%S).log
 N_ARQ=$0
 PWD=$(which pwd)
 AWK=$(which awk)
 TOUCH=$(which touch)
+CAT=$(which cat)
 
 if [ -f $ARQ_READ ];then 
 	echo "The $ARQ_READ file is ready to start reading"
@@ -46,6 +47,14 @@ done < $ARQ_READ
 echo -e "\n\n" 
 echo "Report of Ocorrencias by Date and Time"
 echo -e "\n\n" 
+
+numline=`cat $ARQ_WRITE | wc -l`
+
+if [ $numline -eq 0 ];then
+echo "There are no occurrences in this file"
+exit 0
+fi
+
 while read linha
 do
 	echo $linha | $AWK -F" " '{print $1,$2}' 
